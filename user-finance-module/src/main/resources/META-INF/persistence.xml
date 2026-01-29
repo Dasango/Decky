@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <persistence>
     <persistence-unit name="auction_db">
-        <class >com.auction.userfinance.entities.User</class>
-        <class >com.auction.userfinance.entities.Wallet</class>
-        <class >com.auction.userfinance.entities.FinancialTransaction</class>
+        <class >com.auction.userfinance.persistence.entities.User</class>
+        <class >com.auction.userfinance.persistence.entities.Wallet</class>
+        <class >com.auction.userfinance.persistence.entities.FinancialTransaction</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/auction_db"/>
@@ -14,3 +14,5 @@
         </properties>
     </persistence-unit>
 </persistence>
+
+<

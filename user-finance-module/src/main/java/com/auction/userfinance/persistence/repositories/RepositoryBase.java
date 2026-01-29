@@ -1,4 +1,4 @@
-package com.auction.userfinance.repositories;
+package com.auction.userfinance.persistence.repositories;
 
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;

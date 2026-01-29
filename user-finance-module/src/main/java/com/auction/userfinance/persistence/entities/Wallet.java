@@ -1,4 +1,4 @@
-package com.auction.userfinance.entities;
+package com.auction.userfinance.persistence.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
