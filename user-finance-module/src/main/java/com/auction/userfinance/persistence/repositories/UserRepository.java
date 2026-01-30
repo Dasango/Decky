@@ -23,6 +23,7 @@ public class UserRepository extends RepositoryBase<User> {
         this.em = em;
     }
 
+
     public List<VIPUsersTransactionsAmountDTO> getVIPUsersTransactionsAmount(){
         String jpql = "SELECT new com.auction.userfinance.persistence.dto.VIPUsersTransactionsAmountDTO(u.name, u.email, SUM(t.amount))" +
                 " FROM User u" +
@@ -59,6 +60,7 @@ public class UserRepository extends RepositoryBase<User> {
         LocalDateTime startOfYear = LocalDateTime.of(year, 1, 1, 0, 0, 0);
 
         String jpql = "SELECT new com.auction.userfinance.persistence.dto.GhostUserDTO(" +
+                "   u.id," +
                 "   u.name," +
                 "   w.balance," +
                 "   MAX(t.timestamp)) " +
@@ -66,7 +68,7 @@ public class UserRepository extends RepositoryBase<User> {
                 " JOIN u.wallet w" +
                 " JOIN w.transactions t" +
                 " WHERE w.balance > 0" +
-                " GROUP BY u.name, w.balance" +
+                " GROUP BY u.name, u.id, w.balance" +
                 " HAVING MAX(t.timestamp) < :limitDate";
 
         return this.em.createQuery(jpql, GhostUserDTO.class)
