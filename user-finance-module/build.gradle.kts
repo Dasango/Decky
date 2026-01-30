@@ -26,11 +26,15 @@ tasks.test {
     useJUnitPlatform()
 }
 
+//sourceSets {
+//    main {
+//        output.setResourcesDir(file("${buildDir}/classes/java/main"))
+//    }
+//}
 sourceSets {
     main {
-        output.setResourcesDir(file("${buildDir}/classes/java/main"))
+        output.setResourcesDir(output.classesDirs.files.first())
     }
 }
-
 
 
