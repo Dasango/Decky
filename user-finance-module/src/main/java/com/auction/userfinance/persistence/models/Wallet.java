@@ -32,7 +32,7 @@ public class Wallet {
 
     @ToString.Exclude
     @OneToOne(mappedBy = "wallet")
-    private User user;
+    private AppUser user;
 
     @Builder.Default
     @ToString.Exclude
