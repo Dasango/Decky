@@ -1,7 +1,10 @@
-package com.auction.userfinance.web.dtos;
+package com.auction.userfinance.services.dtos;
+
 
 import com.auction.userfinance.persistence.models.AppUser;
-import com.auction.userfinance.persistence.models.Wallet;
+import com.auction.userfinance.persistence.models.Role;
+
+import java.util.Set;
 
 public class AppUserDtos {
 
@@ -10,7 +13,7 @@ public class AppUserDtos {
             String name,
             String email,
             Integer reputationPoints,
-            Wallet wallet
+            Set<Role> roles
     ){
         public static Response fromEntity(AppUser user) {
             return new Response(
@@ -18,10 +21,11 @@ public class AppUserDtos {
                     user.getName(),
                     user.getEmail(),
                     user.getReputationPoints(),
-                    user.getWallet()
+                    user.getRoles()
             );
         }
     }
+
     public record LoginRequest(
             String name,
             String password

@@ -1,6 +1,7 @@
 package com.auction.userfinance.web.security;
 
-import com.auction.userfinance.web.dtos.AppUserDtos;
+
+import com.auction.userfinance.services.dtos.AppUserDtos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,7 +1,8 @@
 package com.auction.userfinance.web.controllers;
 
-import com.auction.userfinance.web.dtos.AppUserDtos;
+
 import com.auction.userfinance.services.AppUserService;
+import com.auction.userfinance.services.dtos.AppUserDtos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

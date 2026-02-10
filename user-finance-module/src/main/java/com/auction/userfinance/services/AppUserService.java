@@ -1,7 +1,7 @@
 package com.auction.userfinance.services;
 
-import com.auction.userfinance.web.dtos.AppUserDtos;
 import com.auction.userfinance.persistence.repositories.AppUserRepository;
+import com.auction.userfinance.services.dtos.AppUserDtos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
