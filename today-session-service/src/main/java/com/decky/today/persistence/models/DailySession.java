@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@RedisHash(value = "DailySession", timeToLive = 86400) 
 public class DailySession implements Serializable {
 
     @Id
