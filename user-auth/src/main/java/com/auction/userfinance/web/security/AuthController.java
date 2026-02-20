@@ -23,12 +23,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AppUserDtos.LoginRequest request) {
+    public ResponseEntity<String> login(@RequestBody AppUserDtos.SignUpRequest request) {
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.name(), request.password())
+                new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
-
         String token = jwtUtils.generateToken(authentication.getName());
 
         return ResponseEntity.ok(token);
