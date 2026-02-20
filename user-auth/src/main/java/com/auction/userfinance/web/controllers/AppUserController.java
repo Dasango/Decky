@@ -22,16 +22,9 @@ public class AppUserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AppUserDtos.Response> getUserById(@PathVariable Long id){
-        System.out.println("[Enters]");
         return appUserService.getUserById(id)
                 .map(user -> ResponseEntity.ok().body(user))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<AppUserDtos.Response> signUp(@RequestBody AppUserDtos.SignUpRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                appUserService.createUser(request.username(), request.password())
-        );
-    }
 }
