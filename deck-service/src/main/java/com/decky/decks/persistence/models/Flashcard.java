@@ -21,6 +21,7 @@ public class Flashcard {
     @Id
     private String id;
 
+    private String userId;
     private String deckId;
     
     private String frontText;

@@ -15,8 +15,10 @@ public class FlashcardService {
 
     private final FlashcardRepository flashcardRepository;
 
-    public Flashcard createFlashcard(Flashcard flashcard) {
+    public Flashcard createFlashcard(Flashcard flashcard, String userId) {
         flashcard.setNextReviewDate(LocalDateTime.now());
+
+        flashcard.setUserId(userId);
 
         return flashcardRepository.save(flashcard);
     }

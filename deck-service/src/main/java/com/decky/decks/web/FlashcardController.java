@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -17,8 +18,14 @@ public class FlashcardController {
     private final FlashcardService flashcardService;
 
     @PostMapping
-    public ResponseEntity<Flashcard> create(@RequestBody Flashcard flashcard) {
-        Flashcard savedFlashcard = flashcardService.createFlashcard(flashcard);
+    public ResponseEntity<Flashcard> create(
+            @RequestBody Flashcard flashcard,
+            Principal principal
+    ) {
+
+        String userId = principal.getName();
+
+        Flashcard savedFlashcard = flashcardService.createFlashcard(flashcard, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedFlashcard);
     }
 
@@ -26,4 +33,6 @@ public class FlashcardController {
     public ResponseEntity<List<Flashcard>> findAll(){
         return ResponseEntity.ok(flashcardService.findAll());
     }
+
+
 }
