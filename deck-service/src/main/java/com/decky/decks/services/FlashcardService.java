@@ -3,6 +3,7 @@ package com.decky.decks.services;
 import com.decky.decks.persistence.models.Flashcard;
 import com.decky.decks.persistence.repositories.FlashcardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Limit;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,7 +18,6 @@ public class FlashcardService {
     private final FlashcardRepository flashcardRepository;
 
     public Flashcard createFlashcard(Flashcard flashcard, String userId) {
-        flashcard.setNextReviewDate(LocalDateTime.now());
         flashcard.setUserId(userId);
         return flashcardRepository.save(flashcard);
     }
@@ -35,5 +35,16 @@ public class FlashcardService {
         }
 
         flashcardRepository.delete(flashcard);
+    }
+
+    public List<Flashcard> getReviewBatch(String deckId, int newBatchSize, String currentUserId){
+
+        List<Flashcard> oldOnes = flashcardRepository.findByDeckIdAndUserIdAndNextReviewDateLessThanEqual(deckId, currentUserId,0);
+
+        List<Flashcard> newOnes = flashcardRepository.findByDeckIdAndUserIdAndNextReviewDate(deckId, currentUserId, null,Limit.of(newBatchSize));
+
+        oldOnes.addAll(newOnes);
+
+        return oldOnes;
     }
 }

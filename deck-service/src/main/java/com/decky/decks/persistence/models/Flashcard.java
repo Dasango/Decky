@@ -5,10 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -17,13 +16,14 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "flashcards")
+@CompoundIndex(name = "user_deck_idx", def = "{'userId': 1, 'deckId': 1}")
 public class Flashcard {
 
     @Id
     private String id;
 
     private String userId;
-    @Indexed
+
     private String deckId;
     
     private String frontText;
@@ -33,6 +33,6 @@ public class Flashcard {
 
     private Map<String, String> extraInfo;
 
-    private LocalDateTime nextReviewDate;
+    private Integer nextReviewDate;
 
 }

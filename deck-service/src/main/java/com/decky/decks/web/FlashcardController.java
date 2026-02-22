@@ -2,7 +2,9 @@ package com.decky.decks.web;
 
 import com.decky.decks.persistence.models.Flashcard;
 import com.decky.decks.services.FlashcardService;
+import com.decky.decks.web.dto.FlashcardDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,4 +45,14 @@ public class FlashcardController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/review")
+    public ResponseEntity<List<Flashcard>> getReviewBatch(
+            @RequestBody FlashcardDto.ReviewBatchRequest request,
+            Principal principal
+    ){
+      String userId = principal.getName();
+
+      return ResponseEntity.ok(flashcardService.getReviewBatch(request.deck(), request.size(), userId));
+    };
 }
