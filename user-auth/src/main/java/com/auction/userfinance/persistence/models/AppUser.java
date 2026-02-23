@@ -22,17 +22,10 @@ public class AppUser {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false, unique = true)
-    private String email;
+    private String username;
 
     @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false)
-    @Builder.Default
-    private Integer reputationPoints = 0;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
