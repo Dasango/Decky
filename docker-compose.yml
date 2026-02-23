@@ -1,18 +1,104 @@
 version: '3.8'
+
+networks:
+  decky-network:
+    driver: bridge
+
 services:
+  # --- Infrastructure ---
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: auction_finance
+    ports:
+      - "5432:5432"
+    networks:
+      - decky-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   mongodb:
     image: mongo:latest
-    container_name: mi_mongo_local
     ports:
       - "27017:27017"
+    networks:
+      - decky-network
     volumes:
       - mongo_data:/data/db
 
   redis:
     image: redis:latest
-    container_name: mi_redis_local
     ports:
       - "6379:6379"
+    networks:
+      - decky-network
+
+  # --- Microservices ---
+  user-auth:
+    build:
+      context: ./user-auth
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/auction_finance
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=mysecretpassword
+      - JWT_SECRET=secreto_super_seguro_100%_real_el_proyecto_de_apuestas
+    networks:
+      - decky-network
+
+  deck-service:
+    build:
+      context: ./deck-service
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/decky
+    networks:
+      - decky-network
+
+  today-session-service:
+    build:
+      context: ./today-session-service
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+      - deck-service
+    environment:
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      # DeckServiceClient is naturally resolving "deck-service" from FeignClient(name="deck-service", url="http://deck-service:8080") -> see note below
+    networks:
+      - decky-network
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    depends_on:
+      - user-auth
+      - deck-service
+      - today-session-service
+    environment:
+      - JWT_SECRET=secreto_super_seguro_100%_real_el_proyecto_de_apuestas
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_URI=http://user-auth:8081
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_URI=http://deck-service:8080
+      - SPRING_CLOUD_GATEWAY_ROUTES_2_URI=http://today-session-service:8082
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_ID=user-auth
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_PREDICATES_0=Path=/api/auth/**
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_ID=deck-service
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_PREDICATES_0=Path=/api/flashcards/**
+      - SPRING_CLOUD_GATEWAY_ROUTES_2_ID=today-session-service
+      - SPRING_CLOUD_GATEWAY_ROUTES_2_PREDICATES_0=Path=/api/sessions/**
+    ports:
+      - "8083:8083"
+    networks:
+      - decky-network
 
 volumes:
   mongo_data:
+  postgres_data:
