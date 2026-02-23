@@ -8,6 +8,7 @@ import java.util.Map;
 
 @Data
 public class FlashcardCacheDto implements Serializable {
+    private String id;
     private String deckId;
     private String frontText;
     private String backText;

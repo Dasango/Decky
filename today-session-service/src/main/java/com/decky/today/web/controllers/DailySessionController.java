@@ -23,16 +23,21 @@ public class DailySessionController {
     }
 
     @GetMapping
-    public ResponseEntity<DailySession> getSession(@RequestHeader("X-User-Id") String userId) {
-        return sessionService.getSession(userId)
+    public ResponseEntity<DailySession> getSession(
+            @RequestParam("deckId") String deckId,
+            @RequestParam(value = "batchSize", defaultValue = "20") int batchSize,
+            @RequestHeader("X-User-Id") String userId) {
+        return sessionService.getSession(userId, deckId, batchSize)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping
-    public ResponseEntity<DailySession> updateSession(@RequestHeader("X-User-Id") String userId) {
-        return sessionService.updateSession(userId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    @PostMapping("/{cardId}/review")
+    public ResponseEntity<Void> processReview(
+            @PathVariable("cardId") String cardId,
+            @RequestParam("quality") int quality,
+            @RequestHeader("X-User-Id") String userId) {
+        sessionService.processReview(userId, cardId, quality);
+        return ResponseEntity.ok().build();
     }
 }
