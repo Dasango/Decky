@@ -300,6 +300,129 @@ quality=4
   "repetitions": 2
 }
 ```
+---
+
+# Daily Session Service
+
+Manages daily review sessions for a user. It acts as a cache layer on top of the Flashcard Service — on the first request of the day it fetches a review batch from the deck service and stores it in Redis, subsequent requests within the same day hit the cache directly. Sessions expire after 24 hours.
+
+All endpoints live under `/api/sessions`.
+
+## `POST /api/sessions`
+
+Creates or overwrites a session for the user. Useful for manually seeding a session with a specific state.
+
+**Headers**
+```
+X-User-Id: user_123
+```
+
+**Request Body**
+```json
+{
+  "flashcardsToReview": [
+    {
+      "id": "64f1a2b3c4d5e6f7a8b9c0d1",
+      "deckId": "spanish-vocab",
+      "frontText": "Bonjour",
+      "backText": "Hello",
+      "tags": ["greetings"],
+      "extraInfo": { "example": "Bonjour, comment ça va?" }
+    }
+  ],
+  "cardsReviewedToday": 0
+}
+```
+
+**Response** `201 Created`
+```json
+{
+  "userId": "user_123",
+  "flashcardsToReview": [
+    {
+      "id": "64f1a2b3c4d5e6f7a8b9c0d1",
+      "deckId": "spanish-vocab",
+      "frontText": "Bonjour",
+      "backText": "Hello",
+      "tags": ["greetings"],
+      "extraInfo": { "example": "Bonjour, comment ça va?" }
+    }
+  ],
+  "cardsReviewedToday": 0
+}
+```
+
+## `GET /api/sessions`
+
+Returns the active session for the user. If no session exists in Redis, it automatically fetches a fresh review batch from the Flashcard Service, saves it, and returns it. Returns `404` if the batch could not be fetched.
+
+**Headers**
+```
+X-User-Id: user_123
+```
+
+**Query Params**
+
+| Param       | Required | Default | Description                                         |
+|-------------|----------|---------|-----------------------------------------------------|
+| `deckId`    | Yes      | —       | The deck to pull the review batch from              |
+| `batchSize` | No       | `20`    | Max number of new cards to include in the session   |
+
+**Example**
+```
+GET /api/sessions?deckId=spanish-vocab&batchSize=10
+```
+
+**Response** `200 OK`
+```json
+{
+  "userId": "user_123",
+  "flashcardsToReview": [
+    {
+      "id": "64f1a2b3c4d5e6f7a8b9c0d1",
+      "deckId": "spanish-vocab",
+      "frontText": "Bonjour",
+      "backText": "Hello",
+      "tags": ["greetings"],
+      "extraInfo": {}
+    },
+    {
+      "id": "64f1a2b3c4d5e6f7a8b9c0d2",
+      "deckId": "spanish-vocab",
+      "frontText": "Merci",
+      "backText": "Thank you",
+      "tags": ["greetings"],
+      "extraInfo": {}
+    }
+  ],
+  "cardsReviewedToday": 3
+}
+```
+
+## `POST /api/sessions/{cardId}/review`
+
+Submits a review result for a single card. It does two things: removes the card from the active session in Redis and forwards the review to the Flashcard Service to update the card's SM-2 values. `cardsReviewedToday` is incremented by one.
+
+`quality` must be an integer between `0` and `5`.
+
+| Value | Meaning                      |
+|-------|------------------------------|
+| 0 – 2 | Incorrect — card is reset    |
+| 3     | Correct but hard             |
+| 4     | Correct with some hesitation |
+| 5     | Perfect recall               |
+
+**Headers**
+```
+X-User-Id: user_123
+```
+
+**Query Params**
+```
+quality=4
+```
+
+**Response** `200 OK` *(empty body)*
 
 ---
 # API Gateway
