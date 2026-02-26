@@ -37,7 +37,6 @@ public class Flashcard {
 
     private Map<String, String> extraInfo;
 
-    // Spaced Repetition (SuperMemo-2) fields
     private Integer nextReviewDate;
 
     @Builder.Default

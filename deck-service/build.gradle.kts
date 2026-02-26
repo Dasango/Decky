@@ -25,7 +25,8 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
-    // Security removed, handled by api-gateway
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))

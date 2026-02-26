@@ -2,13 +2,15 @@ package com.decky.decks.services;
 
 import com.decky.decks.persistence.models.Flashcard;
 import com.decky.decks.persistence.repositories.FlashcardRepository;
+import com.decky.decks.web.dto.FlashcardDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Limit;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,65 +19,85 @@ public class FlashcardService {
 
     private final FlashcardRepository flashcardRepository;
 
-    public Flashcard createFlashcard(Flashcard flashcard, String userId) {
-        flashcard.setUserId(userId);
-        return flashcardRepository.save(flashcard);
+    // ── Helpers ──────────────────────────────────────────────────────────────────
+
+    private Flashcard findAndAuthorize(String id, String userId, String action) {
+        Flashcard card = flashcardRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flashcard no encontrada"));
+        if (!card.getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "No tienes permiso para " + action + " esta flashcard");
+        }
+        return card;
     }
+
+    // ── Queries ──────────────────────────────────────────────────────────────────
 
     public List<Flashcard> findAll(String userId) {
         return flashcardRepository.findAllByUserId(userId);
     }
 
-    public void deleteFlashcard(String id, String currentUserId) {
-        Flashcard flashcard = flashcardRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flashcard no encontrada"));
-
-        if (!flashcard.getUserId().equals(currentUserId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso para eliminar esta flashcard");
-        }
-
-        flashcardRepository.delete(flashcard);
+    public List<Flashcard> findAllFromDeck(String deckId, String userId) {
+        return flashcardRepository.findAllByDeckIdAndUserId(deckId, userId);
     }
 
-    public List<Flashcard> getReviewBatch(String deckId, int newBatchSize, String currentUserId) {
-
-        List<Flashcard> oldOnes = flashcardRepository.findByDeckIdAndUserIdAndNextReviewDateLessThanEqual(deckId,
-                currentUserId, 0);
-
-        List<Flashcard> newOnes = flashcardRepository.findByDeckIdAndUserIdAndNextReviewDate(deckId, currentUserId,
-                null, Limit.of(newBatchSize));
-
-        oldOnes.addAll(newOnes);
-
-        return oldOnes;
+    @Cacheable(value = "deckSize", key = "#deckId + ':' + #userId")
+    public long getDeckSize(String deckId, String userId) {
+        return flashcardRepository.countByDeckIdAndUserId(deckId, userId);
     }
 
-    public Flashcard update(String id, Flashcard request, String currentUserId) {
-        Flashcard existing = flashcardRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flashcard no encontrada"));
-
-        if (!existing.getUserId().equals(currentUserId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso para actualizar esta flashcard");
-        }
-
-        existing.setFrontText(request.getFrontText());
-        existing.setBackText(request.getBackText());
-        existing.setTags(request.getTags());
-        existing.setExtraInfo(request.getExtraInfo());
-
-        return flashcardRepository.save(existing);
+    public List<String> getAllDecks(String userId) {
+        return flashcardRepository.findDistinctDeckIdsByUserId(userId);
     }
 
-    public Flashcard processReview(String id, String currentUserId, int quality) {
-        Flashcard card = flashcardRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flashcard no encontrada"));
+    public List<Flashcard> getReviewBatch(String deckId, int newBatchSize, String userId) {
+        List<Flashcard> due = flashcardRepository
+                .findByDeckIdAndUserIdAndNextReviewDateLessThanEqual(deckId, userId,
+                        (int) java.time.LocalDate.now().toEpochDay());
 
-        if (!card.getUserId().equals(currentUserId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso para editar esta flashcard");
-        }
+        List<Flashcard> fresh = flashcardRepository
+                .findByDeckIdAndUserIdAndNextReviewDate(deckId, userId, null, Limit.of(newBatchSize));
+
+        due.addAll(fresh);
+        return due;
+    }
+
+    // ── Mutations ────────────────────────────────────────────────────────────────
+
+    @CacheEvict(value = "deckSize", key = "#request.deckId() + ':' + #userId")
+    public Flashcard createFlashcard(FlashcardDto.CreateRequest request, String userId) {
+        Flashcard card = Flashcard.builder()
+                .userId(userId)
+                .deckId(request.deckId())
+                .frontText(request.frontText())
+                .backText(request.backText())
+                .tags(request.tags())
+                .extraInfo(request.extraInfo())
+                .build();
+        return flashcardRepository.save(card);
+    }
+
+    @CacheEvict(value = "deckSize", key = "#deckId + ':' + #userId")
+    public void deleteFlashcard(String deckId, String id, String userId) {
+        Flashcard card = findAndAuthorize(id, userId, "eliminar");
+        flashcardRepository.delete(card);
+    }
+
+    public Flashcard update(String id, FlashcardDto.UpdateRequest request, String userId) {
+        Flashcard card = findAndAuthorize(id, userId, "actualizar");
+        card.setFrontText(request.frontText());
+        card.setBackText(request.backText());
+        card.setTags(request.tags());
+        card.setExtraInfo(request.extraInfo());
+        return flashcardRepository.save(card);
+    }
+
+    public Flashcard processReview(String id, String userId, int quality) {
+        Flashcard card = findAndAuthorize(id, userId, "editar");
 
         if (quality < 0 || quality > 5) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Calidad de repaso debe estar entre 0 y 5");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Calidad de repaso debe estar entre 0 y 5");
         }
 
         int repetitions = card.getRepetitions() != null ? card.getRepetitions() : 0;
@@ -83,30 +105,24 @@ public class FlashcardService {
         int interval = card.getInterval() != null ? card.getInterval() : 0;
 
         if (quality >= 3) {
-            if (repetitions == 0) {
-                interval = 1;
-            } else if (repetitions == 1) {
-                interval = 6;
-            } else {
-                interval = (int) Math.round(interval * easeFactor);
-            }
+            interval = switch (repetitions) {
+                case 0 -> 1;
+                case 1 -> 6;
+                default -> (int) Math.round(interval * easeFactor);
+            };
             repetitions++;
         } else {
             repetitions = 0;
             interval = 1;
         }
 
-        easeFactor = easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
-        if (easeFactor < 1.3) {
-            easeFactor = 1.3;
-        }
+        easeFactor = Math.max(1.3,
+                easeFactor + 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
 
         card.setRepetitions(repetitions);
         card.setEaseFactor(easeFactor);
         card.setInterval(interval);
-
-        int todayEpochDay = (int) java.time.LocalDate.now().toEpochDay();
-        card.setNextReviewDate(todayEpochDay + interval);
+        card.setNextReviewDate((int) java.time.LocalDate.now().toEpochDay() + interval);
 
         return flashcardRepository.save(card);
     }
