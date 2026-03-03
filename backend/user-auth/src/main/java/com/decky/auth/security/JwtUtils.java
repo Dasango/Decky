@@ -1,4 +1,4 @@
-package com.decky.auth.web.security;
+package com.decky.auth.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

@@ -2,7 +2,7 @@ package com.decky.auth.controllers;
 
 import com.decky.auth.services.AppUserService;
 import com.decky.auth.dtos.AppUserDtos;
-import com.decky.auth.web.security.JwtUtils;
+import com.decky.auth.security.JwtUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

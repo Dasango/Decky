@@ -1,4 +1,4 @@
-package com.decky.auth.web.security;
+package com.decky.auth.security;
 
 import com.decky.auth.models.AppUser;
 import com.decky.auth.repositories.AppUserRepository;

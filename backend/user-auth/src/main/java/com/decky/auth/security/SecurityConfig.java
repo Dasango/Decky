@@ -1,4 +1,4 @@
-package com.decky.auth.web.security;
+package com.decky.auth.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

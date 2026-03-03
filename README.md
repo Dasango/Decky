@@ -428,6 +428,27 @@ quality=4
 # API Gateway
 Serves as the primary entry point for all program services, providing a unified interface for client access. The API Gateway operates on port 8083 and implements JWT-based authentication to control access to protected microservices while allowing unrestricted access to authentication controllers.
 
+## Runtime ports
+
+All services use the same ports in both local and Docker environments:
+
+| Service                | Internal Port | Local URL (direct)          | Through Gateway (local)      |
+|------------------------|--------------|-----------------------------|------------------------------|
+| User Auth              | 8081         | `http://localhost:8081`     | `http://localhost:8083/auth` |
+| Deck Service           | 8080         | `http://localhost:8080`     | `http://localhost:8083/api/flashcards` |
+| Today Session Service  | 8082         | `http://localhost:8082`     | `http://localhost:8083/api/sessions` |
+| API Gateway            | 8083         | `http://localhost:8083`     | —                            |
+
+When running with `docker-compose`, the same ports are published on the host:
+
+- **Postgres**: `localhost:5433` → container `5432`
+- **MongoDB**: `localhost:27017` → container `27017`
+- **Redis**: `localhost:6379` → container `6379`
+- **User Auth**: `localhost:8081` → container `8081`
+- **Deck Service**: `localhost:8080` → container `8080`
+- **Today Session Service**: `localhost:8082` → container `8082`
+- **API Gateway**: `localhost:8083` → container `8083`
+
 <div align="center">
   <sub>Built with <3 by David</sub>
 </div>
