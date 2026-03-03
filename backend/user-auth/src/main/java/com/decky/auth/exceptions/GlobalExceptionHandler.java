@@ -1,4 +1,4 @@
-package com.decky.auth.controllers;
+package com.decky.auth.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

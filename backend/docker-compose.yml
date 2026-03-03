@@ -44,6 +44,8 @@ services:
       - .env
     networks:
       - decky-network
+    ports:
+      - "8081:8080"
 
   deck-service:
     build:
@@ -65,7 +67,8 @@ services:
       - deck-service
     env_file:
       - .env
-      # DeckServiceClient is naturally resolving "deck-service" from FeignClient(name="deck-service", url="http://deck-service:8080") -> see note below
+    environment:
+      - SERVER_PORT=8082
     networks:
       - decky-network
 
@@ -79,16 +82,6 @@ services:
       - today-session-service
     env_file:
       - .env
-    environment:
-      - SPRING_CLOUD_GATEWAY_ROUTES_0_URI=http://user-auth:8081
-      - SPRING_CLOUD_GATEWAY_ROUTES_1_URI=http://deck-service:8080
-      - SPRING_CLOUD_GATEWAY_ROUTES_2_URI=http://today-session-service:8082
-      - SPRING_CLOUD_GATEWAY_ROUTES_0_ID=user-auth
-      - SPRING_CLOUD_GATEWAY_ROUTES_0_PREDICATES_0=Path=/api/auth/**
-      - SPRING_CLOUD_GATEWAY_ROUTES_1_ID=deck-service
-      - SPRING_CLOUD_GATEWAY_ROUTES_1_PREDICATES_0=Path=/api/flashcards/**
-      - SPRING_CLOUD_GATEWAY_ROUTES_2_ID=today-session-service
-      - SPRING_CLOUD_GATEWAY_ROUTES_2_PREDICATES_0=Path=/api/sessions/**
     ports:
       - "8083:8083"
     networks:
