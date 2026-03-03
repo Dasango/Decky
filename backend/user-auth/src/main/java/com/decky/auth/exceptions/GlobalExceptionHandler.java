@@ -1,5 +1,6 @@
 package com.decky.auth.exceptions;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -31,5 +32,14 @@ public class GlobalExceptionHandler {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Validation error");
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+
+        String message = ex.getMostSpecificCause().getMessage();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(message);
     }
 }

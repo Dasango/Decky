@@ -10,4 +10,5 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
     public Optional<AppUser> findByUsername(String name);
 
+    public boolean existsByUsername(String name);
 }

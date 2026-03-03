@@ -16,7 +16,7 @@ spring:
             allowCredentials: true
       routes:
         - id: user-auth
-          uri: http://localhost:8080
+          uri: http://localhost:8081
           predicates:
             - Path=/auth/**
             

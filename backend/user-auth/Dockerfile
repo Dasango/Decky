@@ -1,5 +1,4 @@
 FROM eclipse-temurin:21-jdk-alpine
-VOLUME /tmp
 ARG JAR_FILE=build/libs/user-auth.jar
 COPY ${JAR_FILE} app.jar
 EXPOSE 8081

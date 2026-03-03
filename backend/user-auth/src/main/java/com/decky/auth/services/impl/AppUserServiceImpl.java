@@ -6,6 +6,7 @@ import com.decky.auth.dtos.AppUserDtos;
 import com.decky.auth.services.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,10 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     public AppUserDtos.Response createUser(AppUserDtos.SignUpRequest request) {
+        if (appUserRepository.existsByUsername(request.username())) {
+            throw new DataIntegrityViolationException("User already exists");
+        }
+
         return AppUserDtos.Response.fromEntity(
                 appUserRepository.save(AppUser.builder()
                         .username(request.username())
