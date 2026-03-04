@@ -25,13 +25,13 @@ public class DailySessionServiceImpl implements DailySessionService {
     private static final Duration TTL = Duration.ofDays(1);
 
     public DailySession saveSession(DailySession session) {
-        String key = KEY_PREFIX + session.getUserId();
+        String key = KEY_PREFIX + session.getUserId() + ":" + session.getDeckId();
         redisTemplate.opsForValue().set(key, session, TTL);
         return session;
     }
 
     public Optional<DailySession> getSession(String userId, String deckId, int batchSize) {
-        String key = KEY_PREFIX + userId;
+        String key = KEY_PREFIX + userId + ":" + deckId;
         Object result = redisTemplate.opsForValue().get(key);
 
         if (result != null) {
@@ -56,6 +56,7 @@ public class DailySessionServiceImpl implements DailySessionService {
 
             DailySession newSession = DailySession.builder()
                     .userId(userId)
+                    .deckId(deckId)
                     .flashcardsToReview(cachedCards)
                     .cardsReviewedToday(0)
                     .build();
@@ -67,21 +68,35 @@ public class DailySessionServiceImpl implements DailySessionService {
         }
     }
 
-    public void processReview(String userId, String cardId, int quality) {
-        String key = KEY_PREFIX + userId;
-        Object result = redisTemplate.opsForValue().get(key);
+    public void processReview(String userId, String deckId, String cardId, int quality) {
+        String key = KEY_PREFIX + userId + ":" + (deckId != null ? deckId : "*");
 
-        if (result != null) {
-            DailySession session = (DailySession) result;
-
-            // Remove card from cache
-            session.getFlashcardsToReview().removeIf(c -> c.getId() != null && c.getId().equals(cardId));
-            session.setCardsReviewedToday(session.getCardsReviewedToday() + 1);
-
-            saveSession(session);
-
-            // Sync via Feign client seamlessly
-            deckServiceClient.processReview(cardId, quality, userId);
+        if (deckId != null) {
+            DailySession session = (DailySession) redisTemplate.opsForValue().get(key);
+            if (session != null) {
+                session.getFlashcardsToReview().removeIf(c -> c.getId().equals(cardId));
+                session.setCardsReviewedToday(session.getCardsReviewedToday() + 1);
+                saveSession(session);
+            }
+        } else {
+            // Fallback to scanning if deckId is missing
+            redisTemplate.keys(key).forEach(k -> {
+                DailySession session = (DailySession) redisTemplate.opsForValue().get(k);
+                if (session != null
+                        && session.getFlashcardsToReview().stream().anyMatch(c -> c.getId().equals(cardId))) {
+                    session.getFlashcardsToReview().removeIf(c -> c.getId().equals(cardId));
+                    session.setCardsReviewedToday(session.getCardsReviewedToday() + 1);
+                    redisTemplate.opsForValue().set(k, session, TTL);
+                }
+            });
         }
+
+        // Sync via Feign client
+        deckServiceClient.processReview(cardId, quality, userId);
+    }
+
+    public void deleteSession(String userId, String deckId) {
+        String key = KEY_PREFIX + userId + ":" + deckId;
+        redisTemplate.delete(key);
     }
 }

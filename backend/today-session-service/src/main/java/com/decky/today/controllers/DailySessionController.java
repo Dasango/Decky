@@ -36,8 +36,17 @@ public class DailySessionController {
     public ResponseEntity<Void> processReview(
             @PathVariable("cardId") String cardId,
             @RequestParam("quality") int quality,
+            @RequestParam(value = "deckId", required = false) String deckId,
             @RequestHeader("X-User-Id") String userId) {
-        sessionService.processReview(userId, cardId, quality);
+        sessionService.processReview(userId, deckId, cardId, quality);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteSession(
+            @RequestParam("deckId") String deckId,
+            @RequestHeader("X-User-Id") String userId) {
+        sessionService.deleteSession(userId, deckId);
+        return ResponseEntity.noContent().build();
     }
 }

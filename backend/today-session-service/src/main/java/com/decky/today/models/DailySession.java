@@ -19,6 +19,8 @@ public class DailySession implements Serializable {
     @Id
     private String userId;
 
+    private String deckId;
+
     private List<FlashcardCacheDto> flashcardsToReview;
 
     private int cardsReviewedToday;

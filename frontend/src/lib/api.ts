@@ -73,5 +73,6 @@ export const api = {
     create: (body: any) => request<any>('/api/sessions', { method: 'POST', body: JSON.stringify(body) }),
     get: (deckId: string, batchSize = 20) => request<any>(`/api/sessions?deckId=${deckId}&batchSize=${batchSize}`),
     submitReview: (cardId: string, quality: number) => request(`/api/sessions/${cardId}/review?quality=${quality}`, { method: 'POST' }),
+    delete: (deckId: string) => request(`/api/sessions?deckId=${deckId}`, { method: 'DELETE' }),
   },
 };

@@ -10,5 +10,7 @@ public interface DailySessionService {
 
     Optional<DailySession> getSession(String userId, String deckId, int batchSize);
 
-    void processReview(String userId, String cardId, int quality);
+    void processReview(String userId, String deckId, String cardId, int quality);
+
+    void deleteSession(String userId, String deckId);
 }

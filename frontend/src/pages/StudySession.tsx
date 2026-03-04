@@ -45,6 +45,7 @@ const StudySession: React.FC = () => {
     const currentCard = session.flashcardsToReview[currentIndex];
     
     try {
+      // Pass deckId if the API supports it, or just cardId and quality
       await api.sessions.submitReview(currentCard.id, quality);
       
       if (currentIndex + 1 < session.flashcardsToReview.length) {
@@ -56,6 +57,7 @@ const StudySession: React.FC = () => {
         setShowFinished(true);
       }
     } catch (err) {
+      console.error('Review submission failed:', err);
       alert('Failed to submit review');
     }
   };
@@ -150,18 +152,42 @@ const StudySession: React.FC = () => {
           {/* Front */}
           <div className="absolute inset-0 backface-hidden bg-white dark:bg-slate-900 rounded-[2.5rem] p-12 flex flex-col items-center justify-center border border-slate-200 dark:border-slate-800">
             <span className="absolute top-8 left-8 text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Question</span>
-            <p className="text-4xl font-bold text-center leading-tight">{currentCard.frontText}</p>
+            
+            {/* Tags in corner */}
+            <div className="absolute top-8 right-8 flex gap-1">
+              {currentCard.tags?.map(tag => (
+                <span key={tag} className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-400 rounded-full">#{tag}</span>
+              ))}
+            </div>
+
+            <p className="text-4xl font-bold text-center leading-tight px-8">{currentCard.frontText}</p>
             <p className="absolute bottom-8 text-xs font-bold text-indigo-500/50 animate-pulse">Click to flip</p>
           </div>
 
           {/* Back */}
           <div className="absolute inset-0 backface-hidden bg-white dark:bg-slate-900 rounded-[2.5rem] p-12 flex flex-col items-center justify-center border-2 border-indigo-500/30 rotate-y-180">
             <span className="absolute top-8 left-8 text-[10px] font-black text-indigo-300 uppercase tracking-[0.2em]">Answer</span>
-            <p className="text-4xl font-bold text-center leading-tight">{currentCard.backText}</p>
-            {currentCard.extraInfo?.example && (
-              <div className="mt-8 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl flex items-start gap-4 max-w-md">
-                <Info size={20} className="text-indigo-400 shrink-0 mt-1" />
-                <p className="text-sm text-slate-500 italic">"{currentCard.extraInfo.example}"</p>
+            
+            {/* Tags in corner */}
+            <div className="absolute top-8 right-8 flex gap-1">
+              {currentCard.tags?.map(tag => (
+                <span key={tag} className="text-[10px] font-bold px-2 py-0.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-400 rounded-full">#{tag}</span>
+              ))}
+            </div>
+
+            <p className="text-4xl font-bold text-center leading-tight px-8">{currentCard.backText}</p>
+            
+            {currentCard.extraInfo && Object.entries(currentCard.extraInfo).length > 0 && (
+              <div className="mt-8 space-y-2 w-full max-w-md">
+                {Object.entries(currentCard.extraInfo).map(([key, value]) => (
+                  <div key={key} className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl flex items-start gap-3">
+                    <Info size={16} className="text-indigo-400 shrink-0 mt-0.5" />
+                    <div className="text-sm">
+                      <span className="font-bold text-indigo-500 uppercase text-[10px] block leading-none mb-1">{key}</span>
+                      <p className="text-slate-500 italic">"{value}"</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>

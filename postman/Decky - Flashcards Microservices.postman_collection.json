@@ -30,13 +30,8 @@
             },
             "url": {
               "raw": "{{gatewayUrl}}/auth/signup",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "auth",
-                "signup"
-              ]
+              "host": ["{{gatewayUrl}}"],
+              "path": ["auth", "signup"]
             }
           },
           "response": []
@@ -60,13 +55,8 @@
             },
             "url": {
               "raw": "{{gatewayUrl}}/auth/login",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{gatewayUrl}}"],
+              "path": ["auth", "login"]
             }
           },
           "response": []
@@ -88,13 +78,8 @@
             ],
             "url": {
               "raw": "{{gatewayUrl}}/api/flashcards",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "flashcards"
-              ]
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "flashcards"]
             }
           },
           "response": []
@@ -119,13 +104,8 @@
             },
             "url": {
               "raw": "{{gatewayUrl}}/api/flashcards",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "flashcards"
-              ]
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "flashcards"]
             }
           },
           "response": []
@@ -150,14 +130,8 @@
             },
             "url": {
               "raw": "{{gatewayUrl}}/api/flashcards/{{flashcardId}}",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "flashcards",
-                "{{flashcardId}}"
-              ]
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "flashcards", "{{flashcardId}}"]
             }
           },
           "response": []
@@ -174,15 +148,8 @@
             ],
             "url": {
               "raw": "{{gatewayUrl}}/api/flashcards/{{deckId}}/{{flashcardId}}",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "flashcards",
-                "{{deckId}}",
-                "{{flashcardId}}"
-              ]
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "flashcards", "{{deckId}}", "{{flashcardId}}"]
             }
           },
           "response": []
@@ -199,14 +166,8 @@
             ],
             "url": {
               "raw": "{{gatewayUrl}}/api/flashcards/decks",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "flashcards",
-                "decks"
-              ]
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "flashcards", "decks"]
             }
           },
           "response": []
@@ -223,14 +184,8 @@
             ],
             "url": {
               "raw": "{{gatewayUrl}}/api/flashcards/69a79020d366fe682df9a080",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "flashcards",
-                "69a79020d366fe682df9a080"
-              ]
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "flashcards", "69a79020d366fe682df9a080"]
             }
           },
           "response": []
@@ -247,15 +202,8 @@
             ],
             "url": {
               "raw": "{{gatewayUrl}}/api/flashcards/deck/{{deckId}}",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "flashcards",
-                "deck",
-                "{{deckId}}"
-              ]
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "flashcards", "deck", "{{deckId}}"]
             }
           },
           "response": []
@@ -272,16 +220,8 @@
             ],
             "url": {
               "raw": "{{gatewayUrl}}/api/flashcards/deck/{{deckId}}/size",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "flashcards",
-                "deck",
-                "{{deckId}}",
-                "size"
-              ]
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "flashcards", "deck", "{{deckId}}", "size"]
             }
           },
           "response": []
@@ -306,14 +246,8 @@
             },
             "url": {
               "raw": "{{gatewayUrl}}/api/flashcards/review",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "flashcards",
-                "review"
-              ]
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "flashcards", "review"]
             }
           },
           "response": []
@@ -330,15 +264,8 @@
             ],
             "url": {
               "raw": "{{gatewayUrl}}/api/flashcards/{{flashcardId}}/review?quality=4",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "flashcards",
-                "{{flashcardId}}",
-                "review"
-              ],
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "flashcards", "{{flashcardId}}", "review"],
               "query": [
                 {
                   "key": "quality",
@@ -374,13 +301,8 @@
             },
             "url": {
               "raw": "{{gatewayUrl}}/api/sessions",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "sessions"
-              ]
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "sessions"]
             }
           },
           "response": []
@@ -397,13 +319,8 @@
             ],
             "url": {
               "raw": "{{gatewayUrl}}/api/sessions?deckId={{deckId}}&batchSize=10",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "sessions"
-              ],
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "sessions"],
               "query": [
                 {
                   "key": "deckId",
@@ -429,20 +346,41 @@
               }
             ],
             "url": {
-              "raw": "{{gatewayUrl}}/api/sessions/{{flashcardId}}/review?quality=4",
-              "host": [
-                "{{gatewayUrl}}"
-              ],
-              "path": [
-                "api",
-                "sessions",
-                "{{flashcardId}}",
-                "review"
-              ],
+              "raw": "{{gatewayUrl}}/api/sessions/{{flashcardId}}/review?quality=4&deckId={{deckId}}",
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "sessions", "{{flashcardId}}", "review"],
               "query": [
                 {
                   "key": "quality",
                   "value": "4"
+                },
+                {
+                  "key": "deckId",
+                  "value": "{{deckId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Flush Session",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "X-User-Id",
+                "value": "{{userId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/sessions?deckId={{deckId}}",
+              "host": ["{{gatewayUrl}}"],
+              "path": ["api", "sessions"],
+              "query": [
+                {
+                  "key": "deckId",
+                  "value": "{{deckId}}"
                 }
               ]
             }

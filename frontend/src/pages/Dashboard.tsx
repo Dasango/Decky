@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, BookOpen, Clock, Activity, Loader2, ChevronRight } from 'lucide-react';
+import { Plus, BookOpen, Loader2, ChevronRight } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -41,8 +41,6 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  const totalCards = Object.values(deckStats).reduce((a, b) => a + b, 0);
-
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <header className="flex justify-between items-end">
@@ -66,18 +64,6 @@ const Dashboard: React.FC = () => {
           label="Total Decks" 
           value={decks.length} 
           color="blue"
-        />
-        <StatCard 
-          icon={<Activity className="text-indigo-600" />} 
-          label="Total Cards" 
-          value={totalCards} 
-          color="indigo"
-        />
-        <StatCard 
-          icon={<Clock className="text-emerald-600" />} 
-          label="Ready Refresh" 
-          value="12" 
-          color="emerald"
         />
       </div>
 

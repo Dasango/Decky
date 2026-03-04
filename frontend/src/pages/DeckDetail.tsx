@@ -39,6 +39,13 @@ const DeckDetail: React.FC = () => {
       try {
         await api.flashcards.delete(deckId, id);
         setCards(prev => prev.filter(c => c.id !== id));
+        
+        // Flush session cache
+        try {
+          await api.sessions.delete(deckId);
+        } catch (flushErr) {
+          console.warn('Failed to flush session cache', flushErr);
+        }
       } catch (err) {
         alert('Failed to delete card');
       }
