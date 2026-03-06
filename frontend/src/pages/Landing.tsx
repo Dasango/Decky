@@ -1,100 +1,95 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Gavel, ShieldCheck, Zap, TrendingUp } from "lucide-react";
+import { ArrowRight, Sparkles, CheckCircle } from "lucide-react";
 
 const Landing = () => {
-  return (
-    <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-background py-24 md:py-32">
-        <div className="container relative z-10 mx-auto px-4 text-center">
-          <h1 className="mb-6 text-4xl font-extrabold tracking-tight sm:text-6xl md:text-7xl">
-            Bid. Win. <span className="text-primary italic">Celebrate.</span>
-          </h1>
-          <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground md:text-xl">
-            The most premium auction platform for elite collectors. Experience real-time bidding with unparalleled security and speed.
-          </p>
-          <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-            <Button size="lg" className="h-12 px-8 text-lg" asChild>
-              <Link to="/signup">Get Started for Free</Link>
-            </Button>
-            <Button size="lg" variant="outline" className="h-12 px-8 text-lg" asChild>
-              <Link to="/#features">Explore Features</Link>
-            </Button>
-          </div>
-        </div>
-        
-        {/* Decorative Background */}
-        <div className="absolute top-0 -z-10 h-full w-full opacity-20 dark:opacity-10">
-          <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary/30 blur-3xl" />
-          <div className="absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-blue-500/20 blur-3xl" />
-        </div>
-      </section>
+  
+  const [isFlipped, setIsFlipped] = useState(false);
 
-      {/* Features Section */}
-      <section id="features" className="bg-muted/50 py-24">
-        <div className="container mx-auto px-4">
-          <div className="mb-16 text-center">
-            <h2 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">Why Choose Auction Pro?</h2>
-            <p className="mx-auto max-w-2xl text-muted-foreground">
-              We provide the tools you need to run successful auctions or find the rarest items in the world.
-            </p>
+  return (
+    <div className="h-screen w-full overflow-hidden bg-slate-50 text-slate-900 selection:bg-slate-200">
+      <div className="container mx-auto grid h-full grid-cols-1 items-center px-6 lg:grid-cols-2 lg:gap-12">
+        
+        {/* Left Column: Content */}
+        <div className="flex flex-col items-start justify-center space-y-8 py-12 lg:py-0">
+          <div className="flex items-center space-x-2 rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm ring-1 ring-slate-200 transition-all hover:ring-slate-300">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+            </span>
+            <span>I want to learn</span>
           </div>
           
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            <FeatureCard 
-              icon={<Zap className="h-10 w-10 text-primary" />} 
-              title="Real-time Bidding" 
-              description="Low-latency updates ensure you never miss a bid in the heat of the action."
-            />
-            <FeatureCard 
-              icon={<ShieldCheck className="h-10 w-10 text-primary" />} 
-              title="Secure Payments" 
-              description="Your transactions are protected by industry-leading security protocols."
-            />
-            <FeatureCard 
-              icon={<TrendingUp className="h-10 w-10 text-primary" />} 
-              title="Market Insights" 
-              description="Get detailed analytics and price trends for all auction items."
-            />
-            <FeatureCard 
-              icon={<Gavel className="h-10 w-10 text-primary" />} 
-              title="Verified Sellers" 
-              description="Every seller is thoroughly vetted to ensure authentic luxury goods."
-            />
+          <div className="space-y-4">
+            <h1 className="text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl">
+              DECKY, <br />
+              <span className="text-slate-400">just a proyect.</span>
+            </h1>
+            <p className="max-w-md text-lg text-slate-500 sm:text-xl">
+              Anki-style spaced repetition meets modern design. Retain information forever with 5 minutes a day.
+            </p>
+          </div>
+
+          <div className="flex w-full flex-col space-y-3 sm:w-auto sm:flex-row sm:space-x-4 sm:space-y-0">
+            <Button size="lg" className="h-14 bg-slate-900 px-8 text-base text-white hover:bg-slate-800" asChild>
+              <Link to="/signup" className="flex items-center space-x-2">
+                <span>Start Learning</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="ghost" className="h-14 px-8 text-base text-slate-600 hover:bg-white" asChild>
+              <Link to="/login">Sign In</Link>
+            </Button>
           </div>
         </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="bg-primary py-20 text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="mb-6 text-3xl font-bold">Ready to start your first auction?</h2>
-          <p className="mb-10 text-lg opacity-90">Join thousands of collectors and starts winning today.</p>
-          <Button size="lg" variant="secondary" className="h-12 px-10 text-lg" asChild>
-            <Link to="/signup">Join Now</Link>
-          </Button>
+        {/* Right Column: Visual Stack */}
+        <div className="relative hidden h-full items-center justify-center lg:flex">
+          <div className="relative h-[450px] w-full max-w-md">
+            {/* Card 3 (Bottom) */}
+            <div className="absolute inset-0 translate-x-12 translate-y-12 rotate-6 rounded-3xl border border-slate-200 bg-white/40 shadow-sm backdrop-blur-sm"></div>
+            
+            {/* Card 2 (Middle) */}
+            <div className="absolute inset-0 translate-x-6 translate-y-6 rotate-3 rounded-3xl border border-slate-200 bg-white/60 shadow-md backdrop-blur-sm"></div>
+            
+            {/* Card 1 (Top) - Now Interactive */}
+            <div 
+              onClick={() => setIsFlipped(!isFlipped)}
+              className="group absolute inset-0 flex cursor-pointer flex-col items-center justify-center space-y-6 rounded-3xl border border-slate-200 bg-white p-12 shadow-xl transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-50 transition-colors group-hover:bg-slate-100">
+                {isFlipped ? (
+                  <CheckCircle className="h-6 w-6 text-emerald-500" />
+                ) : (
+                  <Sparkles className="h-6 w-6 text-slate-900" />
+                )}
+              </div>
+              <div className="text-center">
+                <p className={`text-xs font-semibold uppercase tracking-widest ${isFlipped ? "text-emerald-500" : "text-slate-400"}`}>
+                  {isFlipped ? "Answer" : "Question"}
+                </p>
+                <h2 className="mt-2 text-3xl font-bold text-slate-800">
+                  {isFlipped ? "Reviewing information at increasing intervals." : "What is Spaced Repetition?"}
+                </h2>
+              </div>
+              <div className="w-full space-y-3 pt-6">
+                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                  <div className={`h-full transition-all duration-1000 ${isFlipped ? "w-full bg-emerald-500" : "w-2/3 bg-slate-900 group-hover:w-full"}`}></div>
+                </div>
+                <p className="text-center text-sm font-medium tracking-wide text-slate-400">
+                  {isFlipped ? "Reviewed just now" : "Next review: 4 days"}
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Background Decorative Elements */}
+          <div className="absolute left-1/2 top-1/2 -z-10 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-slate-200/50 to-transparent blur-3xl"></div>
         </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t bg-background py-12">
-        <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>© 2026 Auction Pro. All rights reserved.</p>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 };
-
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
-  return (
-    <div className="flex flex-col items-center rounded-xl border bg-card p-8 text-center shadow-sm transition-all hover:shadow-md">
-      <div className="mb-6">{icon}</div>
-      <h3 className="mb-3 text-xl font-semibold">{title}</h3>
-      <p className="text-muted-foreground">{description}</p>
-    </div>
-  )
-}
 
 export default Landing;

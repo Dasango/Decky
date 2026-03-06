@@ -47,10 +47,6 @@ export function SignupForm({
           <Input id="username" name="username" placeholder="Username" required />
         </Field>
         <Field>
-          <FieldLabel htmlFor="email">Email</FieldLabel>
-          <Input id="email" name="email" type="email" placeholder="m@example.com" required />
-        </Field>
-        <Field>
           <FieldLabel htmlFor="password">Password</FieldLabel>
           <Input id="password" name="password" type="password" required />
         </Field>

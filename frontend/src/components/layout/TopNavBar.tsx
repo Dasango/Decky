@@ -1,66 +1,45 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/auth-store";
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { Brain } from "lucide-react";
 
 export function TopNavBar() {
   const { token, logout } = useAuthStore();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 border-b bg-background/80 backdrop-blur-md">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold tracking-tight text-primary">Auction</span>
+    <div className="fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-md">
+      <div className="container mx-auto flex h-16 items-center justify-between px-6">
+        <Link to="/" className="flex items-center space-x-2 transition-opacity hover:opacity-80">
+          <Brain className="h-6 w-6 text-slate-900" />
+          <span className="text-xl font-bold tracking-tight text-slate-900">Decky</span>
         </Link>
-
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link to="/#features">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Features
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link to="/#how-it-works">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  How it Works
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
 
         <div className="flex items-center space-x-4">
           {token ? (
             <>
-              <Button variant="ghost" asChild>
+              <Button variant="ghost" asChild className="text-slate-600">
                 <Link to="/dashboard">Dashboard</Link>
               </Button>
-              <Button variant="default" onClick={handleLogout}>
+              <Button 
+                variant="outline" 
+                onClick={() => logout()}
+                className="border-slate-200 text-slate-900 hover:bg-slate-50"
+              >
                 Logout
               </Button>
             </>
           ) : (
             <>
-              <Button variant="ghost" asChild>
+              <Button variant="ghost" asChild className="text-slate-600">
                 <Link to="/login">Login</Link>
               </Button>
-              <Button variant="default" asChild>
-                <Link to="/signup">Sign Up</Link>
+              <Button asChild className="bg-slate-900 text-white hover:bg-slate-800">
+                <Link to="/signup">Get Started</Link>
               </Button>
             </>
           )}
