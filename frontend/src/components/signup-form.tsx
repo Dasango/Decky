@@ -37,27 +37,27 @@ export function SignupForm({
     <form className={cn("flex flex-col gap-6", className)} onSubmit={handleSubmit} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Create an account</h1>
-          <p className="text-sm text-balance text-muted-foreground">
-            Enter your details below to create your account
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Create Account</h1>
+          <p className="text-sm text-slate-500">
+            Join Decky and start mastering your cards
           </p>
         </div>
         <Field>
           <FieldLabel htmlFor="username">Username</FieldLabel>
-          <Input id="username" name="username" placeholder="Username" required />
+          <Input id="username" name="username" placeholder="johndoe" required className="border-slate-200 focus:ring-slate-900" />
         </Field>
         <Field>
           <FieldLabel htmlFor="password">Password</FieldLabel>
-          <Input id="password" name="password" type="password" required />
+          <Input id="password" name="password" type="password" required className="border-slate-200 focus:ring-slate-900" />
         </Field>
         <Field>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full bg-slate-900 text-white hover:bg-slate-800 h-11" disabled={loading}>
             {loading ? "Creating account..." : "Sign Up"}
           </Button>
         </Field>
-        <div className="text-center text-sm">
+        <div className="text-center text-sm text-slate-500">
           Already have an account?{" "}
-          <a href="/login" className="underline underline-offset-4">
+          <a href="/login" className="underline underline-offset-4 font-medium text-slate-900 hover:text-slate-700">
             Login
           </a>
         </div>

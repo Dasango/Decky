@@ -3,8 +3,8 @@ import Landing from "../pages/Landing";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Dashboard from "../pages/private/Dashboard";
-import Profile from "../pages/private/Profile";
-import Settings from "../pages/private/Settings";
+import StudySession from "../pages/private/StudySession";
+import EditDeck from "../pages/private/EditDeck";
 import { LayoutSelector } from "../components/layout/LayoutSelector";
 
 const AppRouter = () => {
@@ -16,8 +16,8 @@ const AppRouter = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/study/:deckId" element={<StudySession />} />
+                    <Route path="/edit/:deckId" element={<EditDeck />} />
                 </Routes>
             </LayoutSelector>
         </BrowserRouter>

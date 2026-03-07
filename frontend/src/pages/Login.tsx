@@ -14,11 +14,11 @@ const Login = () => {
         
         try {
             const jwt = await login({
-                username: rawData.email as string, 
+                username: rawData.username as string, 
                 password: rawData.password as string
             });
 
-            setToken(jwt);
+            setToken(jwt, rawData.username as string);
             console.log("Token guardado exitosamente en LocalStorage y Zustand");
 
         } catch (error) {
